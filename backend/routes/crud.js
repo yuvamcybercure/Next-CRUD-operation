@@ -7,9 +7,8 @@ const {
   deleteProduct
 } = require("../Controllers/crud1");
 
-const validateProduct = require("../middleware/validateProduct");
 
-router.post("/products", validateProduct, createProduct);
+router.post("/products", createProduct);
 router.get("/products", getAllProducts);
 router.put("/products/:id", updateProduct);
 router.delete("/products/:id", deleteProduct);

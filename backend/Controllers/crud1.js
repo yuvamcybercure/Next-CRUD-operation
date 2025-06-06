@@ -3,11 +3,30 @@ const Product = require("../models/crud");
 // Create
 const createProduct = async (req, res) => {
   try {
-    const product = new Product(req.body);
-    await product.save();
-    res.status(201).json({ message: "Product created", product });
+    const data = req.body;
+
+    if (Array.isArray(data)) {
+      // Bulk insert
+      const insertedProducts = await Product.insertMany(data);
+      res.status(201).json({
+        message: "Multiple products created",
+        count: insertedProducts.length,
+        products: insertedProducts,
+      });
+    } else {
+      // Single product insert
+      const product = new Product(data);
+      const saved = await product.save();
+      res.status(201).json({
+        message: "Product created",
+        product: saved,
+      });
+    }
   } catch (error) {
-    res.status(500).json({ message: "Error creating product", error });
+    res.status(500).json({
+      message: "Error creating product(s)",
+      error: error.message,
+    });
   }
 };
 
